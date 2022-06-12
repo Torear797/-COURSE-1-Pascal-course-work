@@ -1,0 +1,75 @@
+Unit Menu;
+interface
+Procedure menuAct(var Gd, Gm : smallint;var  N,M : Integer);
+Procedure MenuPaint(var x3,y3:integer);
+implementation
+uses wingraph,winmouse,Global,Options;
+Procedure menuAct(var Gd, Gm : smallint;var  N,M : Integer);
+var  x, y,x1,y1,yi,xi,c,speedX,speedY,CountY,x2,y2,x3,y3 : Integer; k:char; s1,c1:string;
+  i,s,s2,color,color2,Move:byte;  Evt : MouseEventType;
+begin
+color:=4;Move:=1; color2:=0;
+     gd := d8bit; gm := mFullScr;
+  InitGraph(Gd, Gm, '');
+   if GraphResult <> grOk Then Halt(1);
+   OptionsPaint(N,M);
+   MenuPaint(x3,y3);
+   x:=getMaxX div 2; y:=GetMaxy div 2;
+  repeat
+  setVisualPage(2); setActivePage(2);
+  GetMouseEvent(Evt);
+   x2:=GetMouseX; y2:=GetMouseY;
+   if (Evt.Buttons = MouseLeftButton)and(Evt.Action = MouseActionDown)and(x2>x3 div 2-200)and
+   (x2<x3 div 2+200)and(y2>y3 div 2-100)and(y2<y3 div 2+50) then OptionsAct(color,color2,N,M,Move,x,y);
+
+   if (Evt.Buttons = MouseLeftButton)and(Evt.Action = MouseActionDown)and(x2>x3 div 2-200)and
+   (x2<x3 div 2+200)and(y2>y3 div 2+150)and(y2<y3 div 2+300) then halt;
+
+    if (Evt.Buttons = MouseLeftButton)and(Evt.Action = MouseActionDown)and(x2>x3 div 2-200)and
+   (x2<x3 div 2+200)and(y2>y3 div 2-350)and(y2<y3 div 2-200) then
+ begin
+    SetTextStyle(2,0,40); SetTextJustify(0, 1);setbkcolor(color2);
+    SetFillStyle (1,color);
+       SetLineStyle(SolidLn, $C3, 1);  speedX:=x-N-250; speedY:=y-N+50;
+      CountY:=y-N;  s:=30;s2:=2;c:=0;
+      if Move = 1 then begin
+      x1:=x;  y1:=y-Trunc((N-M)*0.9);
+      i:=0; xi:=1;yi:=0;
+      end;
+      if Move = 2 then
+    begin
+      x1:=x;  y1:=y;
+      i:=1; xi:=-1;yi:=1;
+    end;
+     repeat
+      keypressed1(c1,s1,s,s2,c);
+      Change(N,M,x,x1,y,y1,i,xi,yi,c,Move);
+      Paint(s,speedX,speedY,CountY,N,M,x,y,xi,yi,s1,c1,x1,y1);
+      if  GetMouseButtons = MouseRightButton then begin  AppendChoce(c);  break; end;
+    until k=#32;
+ end;
+   until k=#32;
+  closegraph;
+  WriteC(c);
+end;
+Procedure MenuPaint(var x3,y3:integer);
+begin
+   x3:=getMaxX; y3:=getMaxY;
+   SetMouseXY(x3 div 2,y3 div 2);
+  setActivePage(2); SetVisualPage(2);
+  setfillstyle(1,8);
+  bar(0,0,x3,y3);
+       SetFillStyle (1,7);
+    SetTextStyle(2,0,45); SetTextJustify(0, 1); SetLineStyle(SolidLn, $C3, 2);
+
+     rectangle(x3 div 2-200,y3 div 2-350,x3 div 2+200,y3 div 2-200);
+     rectangle(x3 div 2-200,y3 div 2-100,x3 div 2+200,y3 div 2+50);
+     rectangle(x3 div 2-200,y3 div 2+150,x3 div 2+200,y3 div 2+300);
+
+     FloodFill(x3 div 2-250,y3 div 2+200,White);
+     SetColor(White);
+     OutTextXY(x3 div 2-35,y3 div 2+250,'Exit');
+     OutTextXY(x3 div 2-35,y3 div 2-250,'Start');
+     OutTextXY(x3 div 2-60,y3 div 2,'Options');
+end;
+end.

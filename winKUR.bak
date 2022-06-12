@@ -1,0 +1,7 @@
+uses wingraph,Menu,Global;
+Var Gd, Gm : smallint; N,M : Integer; Error:boolean;
+begin
+ReadlnNM(N,M,Error);
+ if Error=false then
+menuAct(Gd,Gm,N,M) else begin Writeln('Incorrect N or M'); Readln; end;
+end.
